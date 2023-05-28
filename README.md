@@ -7,19 +7,19 @@
 ## Setup
 1. git clone this repository
 2. Configure your environment variable 
-```shell
+```bash
 cp .env.example .env
 ```
 3. Install depedencies 
-```shell
+```bash
 npm install
 ```
 4. Run the app 
-```shell
+```bash
 npm run dev
 ```
 or for production
-```shell
+```bash
 npm run start
 ```
 
