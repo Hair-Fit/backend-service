@@ -45,16 +45,6 @@ User.init(
 User.hasMany(RefreshToken);
 RefreshToken.belongsTo(User);
 
-// const findUserByEmail = async (email)=>User.findOne({attributes:['email'],where:{email:email}})
-// const findUserById = async (id)=>User.findOne({where:{id:id}})
-// const findUserByUsername = async (username)=>User.findOne({attributes:['username'],where:{username:username}})
-// const findUserByUsernameOrEmail = async (username,email)=>User.findOne({where:{[Op.or]:[{username:username,email:email}]}})
-// const createuser = async(user)=>{
-//   user.password = await hashString(user.password)
-//   return User.create({user})
-// }
-// const getAllUsers = async ()=>User.findAll({attributes:['id','username','email']})
-
 const customMethodUser = {
   findUserByEmail: async (email) => User.findOne({ attributes: ["email"], where: { email: email } }),
 
@@ -66,7 +56,6 @@ const customMethodUser = {
 
   createUser: async (user) => {
     user.password = await hashString(user.password);
-  // console.log(user);
     return User.create({ ...user });
   },
   getAllUsers: async () => User.findAll({ attributes: ["id", "username", "email"] }),
