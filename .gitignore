@@ -3,3 +3,6 @@
 .env
 
 cookie.txt
+
+model-tfjs
+model-tfjs-*
