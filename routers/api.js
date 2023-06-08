@@ -5,6 +5,8 @@ const { refreshAccessToken } = require("../controllers/auth/refreshAccessToken")
 const { register } = require("../controllers/auth/register");
 const { validateRegistrationData } = require("../middlewares/validateRegistrationData");
 const { verifyRefreshToken } = require("../middlewares/verifyTokens");
+const { uploadImg } = require("../middlewares/uploadImg");
+const { makePredictions } = require("../controllers/predict/predict");
 
 let router = express.Router();
 
@@ -22,5 +24,7 @@ router.post("/auth/register", validateRegistrationData, register)
 router.get("/auth/refresh", verifyRefreshToken, refreshAccessToken)
 router.delete("/auth/logout", logout)
 router.delete("/auth/logout_all", logout_all)
+
+router.post("/predict",uploadImg, makePredictions)
 
 exports.api = router;
