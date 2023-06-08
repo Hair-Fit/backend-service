@@ -4,5 +4,9 @@
 
 cookie.txt
 
+/tmp/img/*
+
+!.gitkeep
+
 model-tfjs
 model-tfjs-*
