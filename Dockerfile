@@ -1,14 +1,19 @@
-FROM node:18-alpine3.16
+# FROM node:18-alpine3.16
+# tfjs cannot use alpine sadly :(
 
-RUN mkdir src
+FROM node:18
 
-WORKDIR /src
+# RUN mkdir src
 
+# WORKDIR /src
+
+# COPY package.json .
 COPY . .
 
-RUN npm i
+RUN npm install
 # RUN npm i nodemon -g
 # 
+EXPOSE 5000
 CMD node server.js
 
 

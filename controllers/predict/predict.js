@@ -17,8 +17,8 @@ exports.makePredictions = async (req, res, next) => {
       // laod model
       console.log("Loading.......");
       // local path model
-      const handler = tf.io.fileSystem("./model-tfjs/model.json");
-      // const handler = tf.io.fileSystem("./model-tfjs-rps/model.json");
+      // const handler = tf.io.fileSystem("./model-tfjs/model.json");
+      const handler = tf.io.fileSystem("./model-tfjs-rps/model.json");
 
       // bucket path model
       // const handler = process.env.GCLOUD_BUCKET_FOR_MODEL
@@ -45,7 +45,8 @@ exports.makePredictions = async (req, res, next) => {
       try {
         const image = fs.readFileSync(imagePath);
         let tensor = tf.node.decodeImage(image);
-        const resizedImage = tensor.resizeNearestNeighbor([100, 150]);
+        // const resizedImage = tensor.resizeNearestNeighbor([100, 150]);
+        const resizedImage = tensor.resizeNearestNeighbor([224, 224]);
         const batchedImage = resizedImage.expandDims(0);
         const input = batchedImage.toFloat().div(tf.scalar(255));
         
