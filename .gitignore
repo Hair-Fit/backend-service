@@ -10,3 +10,9 @@ cookie.txt
 
 model-tfjs
 model-tfjs-*
+
+serviceaccount.json
+
+*.zip
+
+hairfit
