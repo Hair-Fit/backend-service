@@ -19,10 +19,13 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
     },
-    username: {
+    name: {
       allowNull: false,
       type: DataTypes.STRING,
-      unique: true,
+    },
+    gender: {
+      allowNull: false,
+      type: DataTypes.ENUM('male','female'),
     },
     password: {
       allowNull: false,
@@ -51,8 +54,11 @@ const customMethodUser = {
   findUserById: async (id) => User.findOne({ where: { id: id } }),
   indUserByUsername: async (username) => User.findOne({ attributes: ["username"], where: { username: username } }),
 
-  findUserByUsernameOrEmail: async (username, email) =>
-    User.findOne({ where: { [Op.or]: [{ username: username},{email: email }] } }),
+  findUserByUsernameOrEmail: async (email) =>
+    User.findOne({ where: { email: email } }),
+
+  // findUserByUsernameOrEmail: async (username, email) =>
+  //   User.findOne({ where: { [Op.or]: [{ username: username},{email: email }] } }),
 
   createUser: async (user) => {
     user.password = await hashString(user.password);

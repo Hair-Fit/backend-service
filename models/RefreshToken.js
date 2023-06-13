@@ -38,11 +38,10 @@ RefreshToken.init(
     modelName: "RefreshToken",
   }
 );
+const findRefreshTokenById = async (id) => RefreshToken.findByPk(id)
 const customMethodToken = {
-  findRefreshTokenById: async (id) => RefreshToken.findOne({ where: { id: id } }),
-  
   deleteRefreshTokenById: async (id) => {
-    const token = await RefreshToken.findOne(id);
+    const token = await RefreshToken.findByPk(id);
     if (token) {
       await token.destroy();
     }
@@ -57,10 +56,10 @@ const customMethodToken = {
   },
 
   tokenExistInDb: async (id, refreshToken)=>{
-    const tokenFromDB = await this.findRefreshTokenById(id)
+    const tokenFromDB = await findRefreshTokenById(id)
     const match = tokenFromDB && (await bcrypt.compare(refreshToken, tokenFromDB.hashedToken))
     return match
   }
 };
 
-module.exports = { RefreshToken, ...customMethodToken };
+module.exports = { RefreshToken, ...customMethodToken, findRefreshTokenById };

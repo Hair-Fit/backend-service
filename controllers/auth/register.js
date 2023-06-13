@@ -7,8 +7,9 @@ const register = async (req, res)=>{
   if (!user) return res.json({ error: "Registration Failed" });
 
   const data = {
-    username: user.username,
+    username: user.name,
     email: user.email,
+    gender: user.gender,
   };
 
   res.json({ data });

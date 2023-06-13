@@ -10,6 +10,7 @@ const refreshAccessToken = async (req, res) => {
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 * 30,
+    overwrite: true
   });
 
   deleteRefreshTokenById(user.jwtid);
