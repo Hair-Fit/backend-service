@@ -4,10 +4,10 @@ let router = express.Router();
 
 //make ur web app router here (like for using view)
 router.get("/", (req, res) => {
-  res.send("Hello World!");
+  return res.send("Hello World!");
 });
 
 router.get('/cekcek',verifyAccessToken,(req, res) => {
-  res.send("I am verfied");
+  return res.send("I am verfied");
 })
 exports.web = router;

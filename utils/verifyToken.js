@@ -11,7 +11,7 @@ const verifyToken = (token, secret) => {
     if (err) user.tokenError = err.name;
     else user = decoded;
   });
-  console.log(user);
+  // console.log(user);
   return user;
 };
 

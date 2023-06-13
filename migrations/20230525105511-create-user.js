@@ -15,10 +15,13 @@ module.exports = {
         type: Sequelize.STRING,
         unique:true
       },
-      username: {
+      name: {
         allowNull: false,
         type: Sequelize.STRING,
-        unique:true
+      },
+      gender: {
+        allowNull: false,
+        type: Sequelize.ENUM('male','female'),
       },
       password: {
         allowNull: false,
