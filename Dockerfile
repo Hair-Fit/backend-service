@@ -11,7 +11,7 @@ FROM node:18
 COPY . .
 
 RUN npm install
-RUN node initMLModel.js
+# RUN node initMLModel.js
 # RUN npm i nodemon -g
 # 
 EXPOSE 5000
