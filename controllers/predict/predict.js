@@ -1,68 +1,46 @@
-const tf = require("@tensorflow/tfjs-node");
+const { default: axios } = require("axios");
 const { config } = require("dotenv");
+const FormData = require("form-data");
 // const image = require("get-image-data");
 const fs = require("fs");
+const { getImgByShape } = require("../bucket/getImg");
+const { UserRecord } = require("../../models/UserRecord");
 // var path = require("path");
 
-config()
-
-const classes = ["rock", "paper", "scissors"];
+config();
 
 exports.makePredictions = async (req, res, next) => {
   const imagePath = `./tmp/img/${req && req.file.filename}`;
-  // console.log(req.file);
-  try {
-    const loadModel = async (img) => {
-      const output = {};
-      // laod model
-      console.log("Loading.......");
-      // local path model
-      // const handler = tf.io.fileSystem("./model-tfjs/model.json");
-      const handler = tf.io.fileSystem("./model-tfjs-rps/model.json");
+  const formData = new FormData();
+  let img = fs.createReadStream(imagePath);
+  formData.append("file", img);
 
-      // bucket path model
-      // const handler = process.env.GCLOUD_BUCKET_FOR_MODEL
-      // console.log(handler);
-      const model = await tf.loadLayersModel(handler);
-
-      let predictions = await model.predict(img, { batchSize: 10 }).data();
-      // predictions = Array.from(predictions);
-      console.log(`prediction : ${predictions}`);
-      predictions = Array.from(predictions)
-        // Construct
-        .map((prob, idx) => {
-          // var classes = ['paper', 'rock', 'scissors'];
-          return { class: classes[idx], probability: prob };
-        })
-        // Sort Descending, Get the highest one
-        .sort((a, b) => b.probability - a.probability)[0];
-      output.success = true;
-      output.message = `Success.`;
-      output.predictions = predictions;
-      res.statusCode = 200;
-      res.json(output);
-    };
-      try {
-        const image = fs.readFileSync(imagePath);
-        let tensor = tf.node.decodeImage(image);
-        // const resizedImage = tensor.resizeNearestNeighbor([100, 150]);
-        const resizedImage = tensor.resizeNearestNeighbor([224, 224]);
-        const batchedImage = resizedImage.expandDims(0);
-        const input = batchedImage.toFloat().div(tf.scalar(255));
-        
-        await loadModel(input).then((result) => console.log(result));
-        // await loadModel(input);
-        // delete image file
-        fs.unlinkSync(imagePath, (error) => {
-          if (error) {
-            console.log('blabla');
-            console.error(error);
-          }
-        });
-      } catch (error) {
-        res.status(500).json({ message: error, test: "ngab" });
-      }
-  } catch (error) {
-    console.log(error);
-  }
+  const { data } = await axios.post("https://hf-model-bic7f3q5oq-as.a.run.app/predict", formData, {
+    headers: {
+      ...formData.getHeaders(),
+    },
+  }).catch(err=>console.error(err));
+  // console.log(data);
+  fs.unlinkSync(imagePath, (error) => {
+    if (error) {
+      // console.error(error);
+      console.log("error");
+    }
+  });
+  const imgUrl = await getImgByShape(data.answer, req.user.id)
+  console.log(req.user.id);
+  UserRecord.create({
+    prediction : data.answer,
+    img : req.file.filename,
+    userId : req.user.id
+  })
+  // const result = {
+  //   prediction:data.answer,
+  //   recommendation:imgUrl
+  // }
+  return res.json(imgUrl);
 };
+
+exports.getHistory = async (req,res,next)=>{
+  return res.json(await UserRecord.findAll({attributes:['img','createdAt','prediction'],where:{userId:req.user.id},raw:true})) 
+}
