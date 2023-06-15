@@ -14,8 +14,9 @@ exports.makePredictions = async (req, res, next) => {
   const formData = new FormData();
   let img = fs.createReadStream(imagePath);
   formData.append("file", img);
+  const predictURL = process.env.ML_MODEL_URL+"/predict"
 
-  const { data } = await axios.post("https://hf-model-bic7f3q5oq-as.a.run.app/predict", formData, {
+  const { data } = await axios.post(predictURL, formData, {
     headers: {
       ...formData.getHeaders(),
     },
