@@ -19,7 +19,7 @@ tokenVerifier.validateAccessToken = (accessToken) => {
   return verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET);
 };
 
-tokenVerifier.verifyRefreshToken = (refreshToken) => {
+tokenVerifier.verifyRefreshToken = async (refreshToken) => {
   return verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 };
 

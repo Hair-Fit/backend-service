@@ -58,12 +58,15 @@ const listImgBasedOnGender = async (id) => {
 const listImgBasedOnFaceShape = async (predict='oval',id) => {
   const theUser = await User.findOne({where:{id:id},attributes:['gender'],raw:true})
   // console.log(gender.gender);
-  const shape = predict.charAt(0).toUpperCase() + predict.slice(1)
+  let shape = predict.charAt(0).toUpperCase() + predict.slice(1)
+  console.log(shape);
   let gender = theUser.gender
+  console.log(gender);
   let imgUrl = {}
   if(gender=='Men'||gender=='men'||gender=='male')gender='male'
-  console.log(gender);
-  const [files] = await gcs.bucket(bucketName).getFiles({ prefix: `haircut-recomendation-v2/${gender}/${shape}` });
+  // console.log(gender);
+  const [files] = await gcs.bucket(bucketName).getFiles({ prefix: `haircut-recomendation-v2/${gender}/${shape}/` }).catch(err=>console.error(err));
+  console.log(files);
   files.forEach(file => {
     let faceType = file.name.split("/")[2];
     let fileName = slugToTitle(file.name);
@@ -101,14 +104,23 @@ const getImgByGender = async (req, res) => {
     return res.send(error);
   }
 };
-const getImgByShape = async (req, res) => {
+// const getImgByShape = async (req, res) => {
+//   try {
+//     const result = await listImgBasedOnFaceShape(req.predict, req.user.id).catch(console.error());
+//     return res.json(result);
+//   } catch (error) {
+//     console.error(error);
+//     return res.send(error);
+//   }
+// };
+const getImgByShape = async (prediction='oval', userId) => {
   try {
-    const result = await listImgBasedOnFaceShape(req.predict, req.user.id).catch(console.error());
-    return res.json(result);
+    const result = await listImgBasedOnFaceShape(prediction,userId).catch(console.error());
+    return result
   } catch (error) {
     console.error(error);
-    return res.send(error);
+    return error;
   }
 };
 
-module.exports = { getImgAll, getImgByGender, getImgByShape };
+module.exports = { getImgAll, getImgByGender, getImgByShape};

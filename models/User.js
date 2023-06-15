@@ -2,6 +2,7 @@ const { Model, DataTypes, Op } = require("sequelize");
 const { sequelize } = require("./init.db");
 const { RefreshToken } = require("./RefreshToken");
 const { hashString } = require("../utils/hashString");
+const { UserRecord } = require("./UserRecord");
 
 class User extends Model {}
 
@@ -46,7 +47,9 @@ User.init(
   }
 );
 User.hasMany(RefreshToken);
+User.hasMany(UserRecord)
 RefreshToken.belongsTo(User);
+UserRecord.belongsTo(User);
 
 const customMethodUser = {
   findUserByEmail: async (email) => User.findOne({ attributes: ["email"], where: { email: email } }),
