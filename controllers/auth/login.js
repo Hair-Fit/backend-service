@@ -33,7 +33,7 @@ const login = async (req, res) => {
     // add the token to the database
     addRefreshToken(tokenId, user.id, refreshToken);
 
-    return res.json({ accessToken });
+    return res.json({ accessToken, email:user.email, name:user.name, gender:user.gender });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Error" });
